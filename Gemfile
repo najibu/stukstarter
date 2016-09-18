@@ -50,5 +50,10 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 #### My Gems ####
 gem 'bootstrap-sass', '~> 3.3.6'
 gem "font-awesome-rails"
+
+# Devise
 gem 'devise'
+
+# Annotate Models
+gem 'annotate', gi
 gem 'annotate'
