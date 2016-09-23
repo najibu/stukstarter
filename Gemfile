@@ -62,3 +62,5 @@ gem 'simple_form'
 
 # Wysiwyg Bootstrap
 gem 'bootstrap-wysihtml5-rails', github: 'nerian/bootstrap-wysihtml5-rails'
+
+gem 'date_validator'
