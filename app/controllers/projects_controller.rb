@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
 	before_action :authenticate_user!, except: [:index, :show]
 	before_action :set_project, only: [:show, :edit, :update, :destroy]
+	before_action :set_pledges, only: [:show] 
 
 	def index
 		@projects = Project.all
@@ -34,28 +35,32 @@ class ProjectsController < ApplicationController
 	end
 
 	def update
-    respond_to do |format|
-      if @project.update(project_params)
-        format.html { redirect_to @project, notice: "Project was successfully updated" }
-        format.json { render :show, status: :ok, location: @project }
-      else
-        format.html { render :edit }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+		respond_to do |format|
+			if @project.update(project_params)
+				format.html { redirect_to @project, notice: "Project was succesfully Update!"}
+				format.json { render :show, status: :ok, location: @project }
+			else
+				format.html { render :edit }
+				format.json { render json: @project.errors, status: :unprocessable_entity }
+			end
+		end
+	end
 
 	def destroy
 		@project.destroy
 		respond_to do |format| 
 			format.html { redirect_to project_path, notice: "Project was successfully destroyed!"}
 			format.json { head :no_content}
-			end	
+		end	
 	end
 
 	private 
 		def set_project
 			@project = Project.find(params[:id])
+		end
+
+		def set_pledges
+			@pledges = @project.pledges
 		end
 
 		def project_params

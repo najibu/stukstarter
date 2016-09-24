@@ -18,7 +18,7 @@ class PaymentsController < ApplicationController
 				else
 					flash[:error] = "You must provide an amount!"
 				end
-				format.html { redirect_to  new_project_path(reward: @reward) }
+				format.html { redirect_to  new_project_pledge_path(reward: @reward) }
 			end
 		end
 	end
