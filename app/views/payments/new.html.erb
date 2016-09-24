@@ -1,0 +1,27 @@
+<div class="project-intro">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Payment information</h1>
+				<p>Your card will not be charged at this time. If the project is successfully funded your card will be charged <strong><%= number_to_currency(@amount, unit: '$', precision: 2) %> </strong> when the project ends</p>
+				<br>
+				<%= render  'form' %>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var brain;
+	brain = function() {
+		var braintree = Braintree.create("<%= ENV['BRAINTREE_CLIENT_SIDE_ENCRYPTION_KEY'] %>");
+		braintree.onSubmitEncryptionForm("braintree-payment-form");
+	}
+	braintree.setup("<%= @client_token %>", 'dropin', {
+		container: "card-fields",
+		paypal: {
+			singleUse: false
+		}
+	});
+
+</script>
