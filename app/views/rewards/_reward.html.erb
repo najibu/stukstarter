@@ -1,7 +1,9 @@
-<div class="text-right">
-	<%= link_to 'Edit', edit_project_reward_path(@project, reward) %>
-	<%= link_to 'Delete', project_reward_path(@project, reward), method: :delete, data: {confirm: "Are you sure?"} %>
-</div>
+<% if can? :manage, @project  %>
+	<div class="text-right">
+		<%= link_to 'Edit', edit_project_reward_path(@project, reward) %>
+		<%= link_to 'Delete', project_reward_path(@project, reward), method: :delete, data: {confirm: "Are you sure?"} %>
+	</div>
+<% end %>
 
 <%= link_to "#", class: "reward" do  %>
 	<div class="reward-box">

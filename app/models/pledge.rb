@@ -20,6 +20,9 @@
 #
 
 class Pledge < ApplicationRecord
+	extend FriendlyId
+	friendly_id :uuid
+
 	belongs_to :user
 	belongs_to :reward
 	before_validation :generate_uuid!, :on => :create 
@@ -40,6 +43,10 @@ class Pledge < ApplicationRecord
 				self.void!
 			end
 		end
+	end
+
+	def project
+		reward.project
 	end
 
 	def charged?

@@ -2,6 +2,7 @@ class RewardsController < ApplicationController
 	before_action :authenticate_user!
 	before_action :set_project
 	before_action :set_reward, except: [:new, :create]
+	load_and_authorize_resource :through => :project
 
 	def new
 		@reward = @project.rewards.build
@@ -44,7 +45,7 @@ class RewardsController < ApplicationController
 
 	private 
 		def set_project
-			@project = Project.find(params[:project_id])
+			@project = Project.friendly.find(params[:project_id])
 		end
 
 		def set_reward

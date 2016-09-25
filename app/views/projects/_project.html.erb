@@ -3,7 +3,7 @@
 		<%= link_to image_tag(project.image_url, alt: project.name, width: "100%", height: "200px"), project_path(project) %>
 		<div class="description-box">
 			<div class="title">
-				<%= link_to project.name, "#" %>
+				<%= link_to project.name, project_path(project) %>
 			</div>
 			
 			<div class="description">
@@ -21,7 +21,7 @@
 			<div class="stats">
 				<ul>
 					<li>100% <br><span class="label">funded</span></li>
-					<li>$1000 <br><span class="label">pledged</span></li>
+					<li><%= project.goal %> <br><span class="label">pledged</span></li>
 					<li>10 <br><span class="label">days to go</span></li>
 				</ul>
 			</div>
