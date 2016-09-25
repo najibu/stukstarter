@@ -11,11 +11,11 @@
 	</div>
 </div>
 
-<script>
+<script type="text/javascript">
 	var brain;
 	brain = function() {
-		var braintree = Braintree.create("<%= ENV['BRAINTREE_CLIENT_SIDE_ENCRYPTION_KEY'] %>");
-		braintree.onSubmitEncryptionForm("braintree-payment-form");
+		var braintree = Braintree.create("<%= ENV['BRAINTREE_CLIENT_SIDE_ENCRYPTION_KEY'] %>")
+		braintree.onSubmitEncryptForm("braintree-payment-form");
 	}
 	braintree.setup("<%= @client_token %>", 'dropin', {
 		container: "card-fields",
@@ -23,5 +23,4 @@
 			singleUse: false
 		}
 	});
-
 </script>
