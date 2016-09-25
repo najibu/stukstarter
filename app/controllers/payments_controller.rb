@@ -57,8 +57,8 @@ class PaymentsController < ApplicationController
 			@project = Project.find(params[:project_id])
 		end
 
-		def set_reward
-			@reward = @project.rewards.find_by_i(payment_params(:reward_id))
+		def set_reward		
+	    @reward = @project.rewards.find_by_id(payment_params[:reward_id])
 		end
 
 		def set_amount
