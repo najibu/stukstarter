@@ -77,3 +77,9 @@ gem 'momentjs-rails', '~> 2.9',  :github => 'derekprior/momentjs-rails'
 gem 'datetimepicker-rails', github: 'zpaulovics/datetimepicker-rails', branch: 'master', submodules: true
 
 gem 'braintree'
+
+gem 'delayed_job_active_record'
+
+gem "delayed_job_web"
+
+gem 'sinatra', github: 'sinatra/sinatra'

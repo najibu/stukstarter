@@ -20,8 +20,8 @@ class Project < ApplicationRecord
 	has_many :rewards
 
 	before_validation :start_project, :on => :create  
-
 	validates :name, :short_description, :description, :image_url, :expiration_date, :goal, presence: true
+	after_create :charge_backers_if_funded
 
 	def pledges
 		rewards.flat_map(&:pledges)
@@ -53,6 +53,10 @@ class Project < ApplicationRecord
 		void_pledges
 	end
 
+	def total_backed_amount
+		pledges.map(&:amount).inject(0, :+)
+	end
+
 	private 
 		def void_pledges
 			self.pledges.each do |p|
@@ -62,5 +66,9 @@ class Project < ApplicationRecord
 
 		def start_project
 			self.expiration_date = 1.month.from_now
+		end
+
+		def charge_backers_if_funded
+			ChargeBackersJob.set(wait_until: self.expiration_date).perform_later self.id
 		end
 end

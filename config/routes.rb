@@ -8,4 +8,6 @@ Rails.application.routes.draw do
   	resources :pledges
   	resources :payments, only: [:new, :create]
   end
+
+  match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
 end

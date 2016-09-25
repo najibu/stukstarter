@@ -26,22 +26,23 @@ class Pledge < ApplicationRecord
 	validates_presence_of :name, :address, :city, :country, :postal_code, :amount, :user_id
 	after_create :check_if_funded
 
-	private
-		def generate_uuid!
-			begin
-				self.uuid = SecureRandom.hex(16)
-			end while Pledge.find_by(:uuid => self.uuid).present?
+	def charge!
+		return false if self.charged? || !self.project.funded?
+		id = user.customer_id
+		if id.present? && @customer = Braintree::Customer.find(id)
+			result = Braintree::Transaction.sale(
+				:customer_id => @customer.id,
+				:amount => self.amount
+			)
+			if result.success?
+				self.charged!		
+			else
+				self.void!
+			end
 		end
+	end
 
-		def check_if_funded
-			project.funded! if project.total_backed_amount >= project.goal
-		end
-
-		def total_backed_amount
-			pledges.map(&:amount).inject(0, :+)
-		end
-
-		def charged?
+	def charged?
 			status == "charged"
 		end
 
@@ -60,4 +61,16 @@ class Pledge < ApplicationRecord
 		def viod!
 			update(status: "viod")
 		end
+
+	private
+		def generate_uuid!
+			begin
+				self.uuid = SecureRandom.hex(16)
+			end while Pledge.find_by(:uuid => self.uuid).present?
+		end
+
+		def check_if_funded
+			project.funded! if project.total_backed_amount >= project.goal
+		end
+
 end
