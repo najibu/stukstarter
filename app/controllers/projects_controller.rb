@@ -3,7 +3,7 @@ class ProjectsController < ApplicationController
 	before_action :set_project, only: [:show, :edit, :update, :destroy]
 	before_action :set_pledges, only: [:show] 
 	load_and_authorize_resource
-
+	
 	def index
 		@projects = Project.all
 		@displayed_projects = Project.take(4)
@@ -11,6 +11,7 @@ class ProjectsController < ApplicationController
 
 	def show
 		@rewards = @project.rewards
+		@days_to_go = @project.days_to_go
 	end
 
 	def new
@@ -18,7 +19,6 @@ class ProjectsController < ApplicationController
 	end
 
 	def edit
-		
 	end
 
 	def create
@@ -49,22 +49,28 @@ class ProjectsController < ApplicationController
 
 	def destroy
 		@project.destroy
-		respond_to do |format| 
-			format.html { redirect_to project_path, notice: "Project was successfully destroyed!"}
-			format.json { head :no_content}
-		end	
+		respond_to do |format|
+				format.html { redirect_to root_path, notice: "Project was succesfully Destroyed!"}
+				format.json { head :no_content }
+		end
 	end
 
-	private 
-		def set_project
-			@project = Project.friendly.find(params[:id])
-		end
 
-		def set_pledges
-			@pledges = @project.pledges
-		end
 
-		def project_params
-			params.require(:project).permit(:name, :short_description, :description, :goal, :image_url, :expiration_date)
-		end
+	private
+
+	def set_pledges
+		@pledges = @project.pledges
+	end
+
+	def set_project
+		@project = Project.friendly.find(params[:id])
+	end
+
+	def project_params
+		params.require(:project).permit(:name, :short_description, :description, :goal, :image_url, :expiration_date)
+	end
+
 end
+
+

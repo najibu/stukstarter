@@ -22,12 +22,26 @@ class Project < ApplicationRecord
 	belongs_to :user
 	has_many :rewards
 
-	before_validation :start_project, :on => :create  
+	before_validation :start_project, :on => :create
 	validates :name, :short_description, :description, :image_url, :expiration_date, :goal, presence: true
-	after_create :charge_backers_if_funded
+ 	after_create :charge_backers_if_funded
+ 	#before_validation :charge_backers_if_funded, :on => :create
 
 	def pledges
 		rewards.flat_map(&:pledges)
+	end
+
+	def total_backed_amount
+		pledges.map(&:amount).inject(0, :+)
+	end
+
+	def funding_percentage
+		backed = total_backed_amount
+		backed.zero? ? 0 : (backed/goal*100).to_f.round
+	end
+
+	def days_to_go
+		(self.expiration_date.to_date - Date.today).to_i
 	end
 
 	def funded?
@@ -56,15 +70,10 @@ class Project < ApplicationRecord
 		void_pledges
 	end
 
-	def total_backed_amount
-		pledges.map(&:amount).inject(0, :+)
-	end
 
-	private 
+	private
 		def void_pledges
-			self.pledges.each do |p|
-				p.void!
-			end
+			self.pledges.each { |p| p.void! }
 		end
 
 		def start_project
@@ -77,8 +86,9 @@ class Project < ApplicationRecord
 
 		def slug_candidates
 			[
-        :name,
-        [:name, :created_at] 
-			]
+				:name,
+				[:name, :created_at]
+		   ]
 		end
+
 end
