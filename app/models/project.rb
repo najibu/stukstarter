@@ -72,23 +72,28 @@ class Project < ApplicationRecord
 
 
 	private
-		def void_pledges
-			self.pledges.each { |p| p.void! }
-		end
 
-		def start_project
-			self.expiration_date = 1.month.from_now
-		end
 
-		def charge_backers_if_funded
-			ChargeBackersJob.set(wait_until: self.expiration_date).perform_later self.id
-		end
+	def void_pledges
+		self.pledges.each { |p| p.void! }
+	end
 
-		def slug_candidates
-			[
-				:name,
-				[:name, :created_at]
-		   ]
-		end
+	def start_project
+		self.expiration_date = 1.month.from_now
+	end
+
+	def charge_backers_if_funded
+		ChargeBackersJob.set(wait_until: self.expiration_date).perform_later self.id
+	end
+
+	def slug_candidates
+		[
+			:name,
+			[:name, :created_at]
+	   ]
+	end
+
 
 end
+
+

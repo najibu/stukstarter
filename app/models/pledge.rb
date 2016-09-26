@@ -22,12 +22,17 @@
 class Pledge < ApplicationRecord
 	extend FriendlyId
 	friendly_id :uuid
-
+	
 	belongs_to :user
 	belongs_to :reward
-	before_validation :generate_uuid!, :on => :create 
+
+	before_validation :generate_uuid!, :on => :create
 	validates_presence_of :name, :address, :city, :country, :postal_code, :amount, :user_id
 	after_create :check_if_funded
+
+	def project
+		reward.project
+	end
 
 	def charge!
 		return false if self.charged? || !self.project.funded?
@@ -38,36 +43,35 @@ class Pledge < ApplicationRecord
 				:amount => self.amount
 			)
 			if result.success?
-				self.charged!		
-			else
+				self.charged!
+			else	
 				self.void!
 			end
 		end
 	end
 
-	def project
-		reward.project
-	end
 
 	def charged?
-			status == "charged"
-		end
+		status == "charged"
+	end
 
-		def failed?
-			status == "failed"
-		end
+	def failed?
+		status == "failed"
+	end
 
-		def pending?
-			status == "pending"
-		end
+	def pending?
+		status == "pending"
+	end
 
-		def charged!
-			update(status: "charged")
-		end
+	def charged!
+		update(status: "charged")
+	end
 
-		def viod!
-			update(status: "viod")
-		end
+	def void!
+		update(status: "void")
+	end
+
+
 
 	private
 		def generate_uuid!
